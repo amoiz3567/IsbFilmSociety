@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Righteous&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <title>Uni Assist</title>
+</head>
+<style>
+    @font-face {
+    font-family: "sequel";
+    src: url("semisequel.ttf")  format('truetype');
+    }
+
+    .abril-fatface-regular {
+  font-family: "Open Sans", sans-serif;
+  font-family: 'sequel';
+  font-optical-sizing: auto;
+        font-weight: 100;
+  font-style: normal;
+    font-variation-settings:
+    "wdth" 100;
+    }
+
+    :root {
+  --color-alpha: #f5f1e8;
+  --color-beta: #fffaf1;
+  --color-gamma: #FAC2D4;
+  --color-delta: #C2FAE8;
+  --color-chi: #120207;
+  --color-psi: #e8f4f4;
+  --color-omega: #fff;
+}
+
+html {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+}
+
+@media (max-width: 800px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+.cards {
+  position: relative;
+  display: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 4rem 4rem 0;
+  padding: 0.5rem 2rem 1.5rem 1rem;
+  border-radius: 0.2rem;
+  background-color: var(--color-beta);
+  position: relative;
+  min-width: 13rem;
+  min-height: 18rem;
+  transform: translate(-1.5rem, -100%) skewX(-1deg);
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1), background-color 0.5s cubic-bezier(0.64, 0, 0.78, 0);
+  max-width: calc(100vw - 4rem);
+  z-index: 1;
+}
+
+.card h2 {
+  color: var(--color-chi);
+}
+
+.card ul {
+  font-family: sans-serif;
+  padding-left: 1em;
+  margin: 1em 0;
+}
+
+.card li {
+  font-size: 0.875rem;
+  margin: 0.5em 0;
+}
+
+.card a {
+  display: block;
+  color: var(--color-chi);
+  text-decoration: none;
+  margin-top: 3rem;
+}
+
+.card a:hover,
+.card a:focus,
+.card a:active {
+  text-decoration: none;
+}
+
+.card span {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  text-align: center;
+  font-size: 1rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+[data-active="1"] .card:not(:nth-of-type(1)),
+[data-active="2"] .card:not(:nth-of-type(2)),
+[data-active="3"] .card:not(:nth-of-type(3)) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-alpha);
+}
+
+[data-active="1"] .card:nth-of-type(1),
+[data-active="2"] .card:nth-of-type(2),
+[data-active="3"] .card:nth-of-type(3) {
+  z-index: 0;
+  transform: none;
+}
+
+[data-active="1"] .card:nth-of-type(2) {
+  transform: translate(2rem, 2rem);
+  z-index: -1;
+}
+
+[data-current="1"] .card:nth-of-type(3) {
+  transform: translate(4rem, 4rem);
+  z-index: -2;
+}
+
+[data-active="2"] .card:nth-of-type(3) {
+  transform: translate(2rem, 2rem);
+  z-index: -1;
+}
+
+[data-current="2"] .card:nth-of-type(1) {
+  transform: translate(4rem, 4rem);
+  z-index: -2;
+}
+
+[data-active="3"] .card:nth-of-type(1) {
+  transform: translate(2rem, 2rem);
+  z-index: -1;
+}
+
+[data-current="3"] .card:nth-of-type(2) {
+  transform: translate(4rem, 4rem);
+  z-index: -2;
+}
+
+@keyframes shuffle1 {
+  73.33%, 100% {
+    transform: none;
+    z-index: 0;
+  }
+  3.33% {
+    transform: translate(-1.5rem, -100%) skewX(-1deg);
+    z-index: 1;
+  }
+  6.66%, 36.66% {
+    transform: translate(4rem, 4rem);
+    z-index: -2;
+  }
+  40%, 70% {
+    transform: translate(2rem, 2rem);
+    z-index: -1;
+  }
+}
+
+@keyframes shuffle2 {
+  6.66%, 36.66% {
+    transform: none;
+    z-index: 0;
+  }
+  36.66% {
+    transform: translate(-1.5rem, -100%) skewX(-1deg);
+    z-index: 1;
+  }
+  40%, 70% {
+    transform: translate(4rem, 4rem);
+    z-index: -2;
+  }
+  73.33%, 100%, 0%, 3.33% {
+    transform: translate(2rem, 2rem);
+    z-index: -1;
+  }
+}
+
+@keyframes shuffle3 {
+  33.33%, 63.33% {
+    transform: none;
+    z-index: 0;
+  }
+  63.33% {
+    transform: translate(-1.5rem, -100%) skewX(-1deg);
+    z-index: 1;
+  }
+  66.66%, 96.66% {
+    transform: translate(4rem, 4rem);
+    z-index: -2;
+  }
+  100%, 30% {
+    transform: translate(2rem, 2rem);
+    z-index: -1;
+  }
+}
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "sequel", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #FFFFFF; /* White background */
+        background-color: #fffaf1;
+        background-color: #f3f4f5;
+        background-color: #fffaf1;
+        flex-direction: column;
+        overflow-x: hidden;
+    }
+
+    .grid-background {
+        width: 100%;
+        /*height: 1312px;
+        height: 150vh;*/
+        background-image:
+            linear-gradient(to right, rgb(0,0,0,.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(0,0,0,.1) 1px, transparent 1px);
+        background-size: calc(100% / 9) calc(100% / 12); /* 9 blocks from left to right */
+        position: relative;
+        padding-bottom: 55px;
+    }
+    h3 {
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding-top:5px;
+    }
+    i {
+        font-size: 20px;
+        font-weight: 400;
+    }
+    p {
+        white-space: pre;
+        color: #525252;
+        font-weight: 600;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    p b {
+        color: black;
+        font-weight: 700;
+    }
+    .topleft {
+        /*margin-top: 10%;
+        margin-left: 11%;*/
+        padding-left: 11vw;
+        height: 0px;
+    }
+    .topright {
+        margin-left: 35px;
+    }
+    .group {
+        width: 100%;
+        height: auto;
+    }
+    h1 {
+        margin-left: 10%;
+        margin-top: 4%;
+        white-space: pre;
+        font-size: 325px;
+        font-size: 22vw;
+        letter-spacing: 1px;
+        line-height: 320px;
+        line-height: 22vw;
+    }
+    .bottom_b {
+        border-bottom: 1px solid #bebebe;
+    }
+    .top_b {border-top: 1px solid #bebebe;} .left_b {border-left: 1px solid #bebebe;} .right_b {border-right: 1px solid #bebebe;}
+    .header {
+        width: 100vw;
+        border-top: 1px solid #D9D9D9;
+        border-bottom: 1px solid #D9D9D9;
+        border-bottom: 1px solid #bebebe;
+        height:5px;
+        padding: 45px 0;
+    }
+    .header i {
+        font-size: 16px;
+        font-weight: 400;
+    }
+    /*.header .end {
+    }*/
+    .header .mid {
+        gap: 25px;
+        width: 100%;
+    }
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .mid .tag, .end .tag {
+        background-color: #f7f7f7;
+        border-radius: 8px;
+        padding: 5px 10px;
+    }
+    .row {
+        display: flex;
+    }
+    .row_el {
+        gap: 129px;
+    }
+    .hov:hover {
+        color: rgb(77, 77, 77);
+        text-decoration: underline;
+    }
+    .question_mark {
+        right: 15%;
+        top: 10%;
+        width: 0;
+        height: 0;
+        display: flex;
+        font-size: 25px;
+        justify-content: center;
+        align-items: center;
+        padding: 25px 25px;
+        border-radius: 100%;
+        border: 2px solid #9a9a9a;
+    }
+    .dark-shaddow-top {
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 100vw;
+        height: 125px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.332), transparent 55%);
+    }
+    .card_w_cards {
+        display: flex;
+        flex-direction: column;
+    }
+    .card_w_cards .inside_card {
+        padding: 25px 170px 25px 25px;
+        background-color: #00000000;
+    }
+    .inside_card img {
+        border-radius: 250px;
+        padding: 0;
+        width: 65px;
+        height: 65px;
+    }
+    .inside_card .row {
+        padding-top: 15px;
+    }
+    .inside_card p:nth-child(0) {
+        font-weight: 400; color: #333333;
+    }
+    .inside_card p:nth-child(2) {
+        padding: 0 15px;
+        margin-top: 5px;
+        font-weight: 400; color: #101010;
+    }
+    .inside_card p:nth-child(1) {
+        padding: 0 15px;
+        margin-top: 10px;
+    }
+    .inside_card p {
+        color: black;
+    }
+    .border-radius-card {
+        border-radius: 10px;
+    }
+    .inside_card .text_short p {
+        font-weight: 400; color: #101010;
+    }
+    .dark-tag {
+        margin: 25px; background-color: black; color: white; padding: 8px 25px;
+    }
+    .three-grids {
+        width: 100vw;
+        gap: 25px;
+        padding: 55px;
+    }
+    .three-grids div {
+        width: 100%;
+        padding: 25px;
+    }
+    .three-grids p {
+        font-size: 15px;
+    }
+    .hover-angle i {
+        font-size: 25px;
+    }
+    .hover-angle {
+        cursor: pointer;
+        margin-left: 0px;
+        margin-bottom: 5px;
+        gap: 255px;
+        text-underline-offset: 5px;
+    }
+    .hover-angle:hover {
+        transition: .5s;
+        padding-left: 5px;
+    }
+    .mainText h1 {
+        font-size: 350px;
+        font-size: 22.6vw;
+        margin-left: -50px;
+        margin-right: 95px;
+        font-weight: 800;
+    }
+    #reviews {
+        flex-direction: row;
+    }
+    .mobile {
+        display: none;
+    }
+    .view_b {
+        display: none;
+    }
+    .topLeft_t {
+        max-width: 40%;
+    }
+    .to_start {
+        width: 45%;
+        text-align: start;
+    }
+    .a_t {
+        display: block;
+    }
+    .once_end {
+        text-align: end;
+    }
+    .images_v {
+        margin: 0px;
+    }
+    @media screen and (max-width: 975px) {
+        .topright div:nth-child(2)  {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 627px) {
+        .mobile {
+            display: flex;
+        }
+        .more_top_mobile {
+            margin-top: 10vh;
+        }
+        .cards {
+            display: flex;
+        }
+        .to_start {
+            width: 100%;
+            text-align: start;
+        }
+        .once_end {
+            text-align: start;
+        }
+        .a_t {
+            display: none;
+        }
+        .topLeft_t {
+            max-width: 70%;
+        }
+        i {
+            font-size: 13px;
+        }
+        h3 {
+            font-size: 22px;
+        }
+        .three-grids p {
+            font-size: 12px;
+        }
+        .question_mark {
+            top: 3%;
+            right: 10%;
+        }
+        .grid-background {
+            width: 100%;
+            height: 1100px;
+            background-image:
+            linear-gradient(to right, rgb(0,0,0,.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(0,0,0,.1) 1px, transparent 1px);
+            background-size: calc(100% / 4) calc(100% / 6); /* 9 blocks from left to right */
+            position: relative;
+        }
+        .row_el {
+            margin-top: 135px;
+            gap: 100%;
+        }
+        .mainText {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+        }
+        .mainText h1 {
+            padding: 0;
+            margin: 0 0;
+            margin-top: 38vh;
+            margin-top: 15px;
+        }
+        .mainText h3 {
+            display: none;
+        }
+        .three-grids div {
+            padding: 0;
+        }
+        .three-grids {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            padding: 0;
+            padding-left: 34px;
+            padding-top: 35px;
+            gap: 55px;
+        }
+        .images_v {
+            margin-top: 25px;
+        }
+        .view_b {
+            display: flex;
+        }
+        #reviews, .hide {
+            display: none;
+        }
+        .topright {
+            display: none;
+        }
+        .long_mv {
+            width: 100%;
+            height: 2000px;
+            margin-top: 25px;
+        }
+        .images_v {
+            margin-top: 25px;
+        }
+    }
+    .div {
+        height: 0;
+        padding: 1px;
+        width: 80%;
+        background-color: #252525;
+    }
+</style>
+<body>
+    
+    <!--img src="../bro2.jpeg" style="position: absolute; top: 50%; z-index: 1; width: 30%; border-radius: 100%;" alt=""-->
+    <!--div class="dark-shaddow-top"></div-->
+    <!--h3 style="transform: rotate(-90deg); text-align: start; position: absolute; top: 0; left: 0; width: 100%; height: 100vw; color: #F7F8F8;"><div class="abril-fatface-regular" style="background-color: #101010;">A changing aesthetic which is more comforting a turn of events as you must say</div></h3-->
+    <div class="grid-background long_mv">
+        <br><br><br><br>
+    <a class="question_mark" style="position: absolute;">?</a>
+        <div class="row" style="gap: 70px;">
+        <div class="group topleft" style="margin-top: 5.5%;">
+            <i>He says</i>
+            <h3>MONEEB</h3>
+        <p class="topLeft_t" style="text-wrap: wrap;"> 
+"<b>These gatherings</b> serve as a platform for <b>film enthusiasts, industry
+professionals, and creative minds</b> to connect, share ideas, and collaborate. It’s more than an event—it’s a space where the love for cinema fosters inspiration,networking, and a deeper appreciation for the art of filmmaking."</p>
+        </div>
+    </div>
+        <div class="center mainText">
+        <div class="col">
+            <div class="more_top_mobile row">
+                <h1 class="abril-fatface-regular" style="font-weight: 500; font-size: 15vw; letter-spacing: -0.06em;">ISB&nbsp;&nbsp; FILM</h1>
+                <div class="group topright">
+                    <div>
+                    <i>She says</i>
+                    <h3>Nargis</h3>
+                <p style="max-width: 212px; text-wrap: wrap;"> 
+"to bring people together through the magic of cinema. Our open-air screenings aren’t just about watching films; they’re about creating a space where film lovers, industry professionals, and creative thinkers can connect. It’s amazing to see how these events spark conversations, inspire collaborations, and build a real sense of community. For me, it’s more than just showing movies—it’s about celebrating storytelling and the people behind it."
+
+<b>Islamabad</b></p>
+</div>
+
+
+<div>
+<p style="max-width: 212px; text-wrap: wrap;">
+
+I created this society to bring people together through open-air film screenings, where cinema lovers and industry creatives connect, share ideas, and build a vibrant community.
+
+<b>Available for <b style="font-weight: 800;">Everyone</b> for RS.250</b></p>
+        </div>
+        
+                </div>
+            </div>
+            <h1 class="abril-fatface-regular" style="font-weight: 500; letter-spacing: -0.08em; font-size: 15vw; line-height: 25px; letter-spacing: -0.06em;">SOCIETY</h1>
+        </div>
+</div>
+<br><br>
+<br>
+    <div class="row three-grids">
+        <div class="row">
+            <div>
+                <div class="row center">
+                    <img src="nice.jpg" style="width: 65px; margin-right: 25px; height: 65%; border-radius: 100%;" alt="">
+                    <div class="col">
+                        <h3 onclick="window.location.href='https://www.instagram.com/isbfilmsociety/';" style="cursor: pointer;">Instagram</h3>
+                        <i>Social</i>
+                    </div>
+                </div>
+            </div>
+    <div class="center mobile">
+        <a class="question_mark" href="https://www.instagram.com/isbfilmsociety/"><i class="fa fa-solid fa-arrow-right"></i></a>
+    </div>
+        </div>
+        
+    </div>
+
+    <div class="row three-grids images_v" style="width: 100%; padding: 0; gap: 0; height: 70vh;">
+        <div class="row" style="width: 100%;">
+            <img style="width:100%" src="3.jpg" alt="">
+        </div>
+        <div class="row" style="width: 100%;">
+            <img style="width:100%" src="2.jpeg" alt="">
+        </div>
+        <div class="row" style="width: 100%; height: 100;">
+            <img style="width:100%" src="1.jpg" alt="">
+        </div>
+    </div>
+
+
+</div>
+    <div class="center header">
+        <div class="mid center">
+            <i class="tag">Ticket</i>
+            <i>Screenings</i>
+            <i class="hide">Community</i>
+            <i class="hide">Policies</i>
+            <i class="hide">Contact</i>
+        </div>
+        <div class="end">
+            <i onclick="window.location.href='https://www.instagram.com/isbfilmsociety/';" class="dark-tag border-radius-card">Instagram</i>
+        </div>
+    </div>
+    <br><br>
+<br>
+
+    <div class="row three-grids">
+        <div>
+            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Film Society,</h3>
+            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Rules and </h3>
+            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Policies</h3>
+        </div>
+        <div>
+
+<p><b>Our society values respect,
+kindness, and inclusivity.</b>
+Members are expected to treat
+others with dignity, avoid harmful
+behavior, and <b>resolve conflicts</b>
+peacefully.
+<b>Together</b>, we foster a
+supportive and positive
+community for all.
+</p>
+        </div>
+        <div>
+<p><b>Our society brings people together</b>
+through open-air film screenings,
+creating a unique sense of
+community beyond just
+watching movies. <b>These
+gatherings</b> serve as a
+platform for <b>film
+enthusiasts, industry
+professionals, and
+creative minds</b> to
+connect, share ideas,
+and collaborate. It’s
+more than an event—it’s
+a space where the love
+for cinema fosters 
+inspiration, networking,
+and a deeper appreciation
+for the art of filmmaking.
+</p>
+        </div>
+    </div>
+    <div id="cards__" class="cards" style="z-index: 10; margin-top: 100px;" data-active="3" data-current="3">
+        <!-- other content belongs here like reviews -->
+      </div>
+      
+    <div class="card_w_cards">
+        <div id="reviews" class="row center" style="gap: 64px;">
+            
+        </div>
+        <!--i class="view_b dark-tag border-radius-card">Reviews</i-->
+    </div>
+    <br><br><br><br>
+    <br><br><br><br>
+    <div class="center" style="flex-direction: column;">
+        <h3>Follow the latest News</h3>
+        <p style="color: #5c5c5c; font-size: 20px;">With our daily Posts</p>
+        <br>
+        <div class="center">
+            <!--input placeholder="you@email.com" class="fa-not-equal border-radius-card top_b bottom_b left_b right_b" style="padding: 5px 15px; height: 55px;" type="text"-->
+            <a href="https://l.instagram.com/?u=https%3A%2F%2Fforms.gle%2F8SQ5FDGY1a4G2oW17&e=AT3QpWnouWC9ORoXXVabvi7fwNWOUw0BncTS5xAp9ZsWJZ3jIEpawrUIScqyS-lj97tze2Kk3YRP8M1LRHXqX3ppMSPijUj7ll9520w" class="dark-tag border-radius-card" style="font-size: 17px; padding: 15px; font-weight: 400;">Subscribe</a>
+        </div>
+    </div>
+        <br><br><br><br>
+        <br><br><br><br>
+        <div class="grid-background">
+            
+            <div class="mobile">
+                <img src="broj.jpeg" class="mobile" style="position: relative; display: none; user-select: none; -webkit-user-drag: none; -moz-user-select: none; -webkit-user-select: none; margin-top: 35px; top: 50%; z-index: 1; width: 100%; border-radius: 0; margin-bottom: 0;" alt="">
+                <div class="three-grids col" style="margin-top: 0px; padding-left: 20px;">
+                    <div style="width: 100%; align-items: end; justify-content: end;">
+                        <!--div style="height: 100vh; padding: 0; background-color: #faf7f3;" class="bottom_b top_b left_b right_b"><img src="../cool things happen, they just do2.png" style="width: 100%;" alt=""></div-->
+                        <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">01</h3>
+                        <h2 style="font-size: 50px; font-weight: 500;">
+                            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Fill out the</h3>
+                            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Subscription Form.</h3>
+                        </h2>
+                        <br><br><br>
+                        <p style="padding: 0; margin: 0; width: 100%; text-wrap: wrap;">To register, fill out the required details in the form. Once you’re ready, click the button below to access the form and complete your registration.</p>
+<br><br><br>
+                        <a href="https://l.instagram.com/?u=https%3A%2F%2Fforms.gle%2F8SQ5FDGY1a4G2oW17&e=AT3QpWnouWC9ORoXXVabvi7fwNWOUw0BncTS5xAp9ZsWJZ3jIEpawrUIScqyS-lj97tze2Kk3YRP8M1LRHXqX3ppMSPijUj7ll9520w" class="dark-tag border-radius-card" style="font-size: 17px; padding: 15px; font-weight: 400;">Subscribe</a>
+        
+                    </div>
+                    <div style="width: 100%; align-items: start; justify-content: start;">
+                        <!--div style="height: 100vh; padding: 0; background-color: #faf7f3;" class="bottom_b top_b left_b right_b"><img src="../cool things happen, they just do2.png" style="width: 100%;" alt=""></div-->
+                        <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">02</h3>
+                        <h2 style="font-size: 50px; font-weight: 500;">
+                            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">🎉 Buy some Snacks</h3>
+                            <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">for the Movie!?</h3>
+                        </h2>
+                        <br><br><br>
+                        <p style="padding: 0; margin: 0; width: 100%; text-align: start; text-wrap: wrap;">If you are underage, you must attend the screening with a parent or guardian to ensure your safety and compliance with our policies.</p>
+        
+                    </div>
+            </div>
+            </div>
+
+            <div class="hide">
+        <br><br><br><br>
+        <div style="display: flex; flex-direction: column; justify-content: start; align-items: start;">
+            <div class="row center" style="width: 100vw;">
+                <h1 class="to_start abril-fatface-regular" style="padding: 0;font-weight: 550; margin: 0 25px; line-height: 25px; margin-top: 0; font-size: 17vw; letter-spacing: -0.08em;">HOW</h1>
+                <!--p class="a_t" style="text-align: start; width: 100%;">THIS WORKS
+A Community of Students whose needs
+are always are our first Priority
+and they are Fulfilled from a click of
+a Button, Leave a 
+</p>
+            </div>
+            <div class="row center" style="width: 100vw;">
+                <p class="a_t" style="text-align: end; width: 100%;">THIS WORKS
+A Community of Students whose nee
+are always are our first Priority
+and they are Fulfilled from a click of
+a Button, Leave a 
+</p-->
+                <h1 class="to_start once_end abril-fatface-regular" style="width: 100%; padding: 0; font-weight: 100; margin: 0 25px; padding-right: 25px; margin-top: 0; letter-spacing: -0.08em; line-height: 80%; font-size: 17vw;">THIS<br>WORKS</h1>
+            </div>
+        </div>
+        <div style="height: 50px;"></div>
+        <div class="three-grids row" style="margin-top: 0px; padding-left: 20px;">
+            <div class="hide" style="width: 50%; align-items: end; justify-content: end;">
+                <!--div style="height: 100vh; padding: 0; background-color: #faf7f3;" class="bottom_b top_b left_b right_b"><img src="../cool things happen, they just do2.png" style="width: 100%;" alt=""></div-->
+                <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">01</h3>
+                <h2 style="font-size: 50px; font-weight: 500;">
+                    <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Fill out the</h3>
+                    <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: start;">Subscription Form.</h3>
+                </h2>
+                <br><br><br>
+                <p style="padding: 0; margin: 0; width: 100%; text-wrap: wrap;">To register, fill out the required details in the form. Once you’re ready, click the button below to access the form and complete your registration.</p>
+                <br><br><br>
+                <a href="https://l.instagram.com/?u=https%3A%2F%2Fforms.gle%2F8SQ5FDGY1a4G2oW17&e=AT3QpWnouWC9ORoXXVabvi7fwNWOUw0BncTS5xAp9ZsWJZ3jIEpawrUIScqyS-lj97tze2Kk3YRP8M1LRHXqX3ppMSPijUj7ll9520w" class="dark-tag border-radius-card" style="font-size: 17px; padding: 15px; font-weight: 400;">Subscribe</a>
+                
+            </div>
+            <div style="width: 600px;" class="center">
+    <img src="broj.jpeg" class="hide" style="position: absolute; user-select: none; -webkit-user-drag: none; -moz-user-select: none; -webkit-user-select: none; margin-top: 25px; top: 50%; z-index: 1; width: 30%; border-radius: 100%;" alt="">
+            </div>
+            <div class="hide" style="width: 50%; align-items: end; justify-content: end;">
+                <!--div style="height: 100vh; padding: 0; background-color: #faf7f3;" class="bottom_b top_b left_b right_b"><img src="../cool things happen, they just do2.png" style="width: 100%;" alt=""></div-->
+                <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: end;">02</h3>
+                <h2 style="font-size: 50px; font-weight: 500;">
+                    <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: end;">🎉 Buy some Snacks</h3>
+                    <h3 style="font-size: 45px; letter-spacing: -1px; font-weight: 600; text-align: end;">for the Movie!?</h3>
+                </h2>
+                <br><br><br>
+                <p style="padding: 0; margin: 0; width: 100%; text-align: end; text-wrap: wrap;">If you are underage, you must attend the screening with a parent or guardian to ensure your safety and compliance with our policies.</p>
+
+            </div>
+
+
+                <!--div class="center">
+                    <div class="div" style="background-color: #575656; padding: 5px;"></div>
+                </div-->
+        <!--img src="cool things happen, they just do2.png" class="view_b bottom_b top_b left_b right_b" style="margin: -10px; width: 100%;" alt=""-->
+    </div>
+    </div>
+
+    <div style="display: flex; align-items: end; justify-content:start; height: 30%;">
+        <p style="margin: 25px; font-size: 25px; font-weight: 900;"><i class="fa fa-copyright"></i> CopyRights.</p>
+    </div>
+</body>
+</html>
+<script>
+    let review_users = ['USMAN._doodhPatti','_Maria_1heh_','hannanLOAF'];
+    let review_dates = ['26/2/24','12/5/24','2/6/24'];
+    let pfps = ['pfp_.jpeg','pfp_.jpeg','pfp_.jpeg'];
+    let review_titles = ['It is Speacial','Love','Community'];
+    let review_bodies = [`" We're building a movement
+where young people can express
+their genuine ideas and embrace their
+culture and create something true
+to their identity."
+`,`"On this special day of the year,
+let's come together to share stories,
+appreciate the little things,
+and cultivate gratitude in Islamabad"
+`,`"This society isn't just about films,
+it's about creating a culture of support
+and collaboration for anyone
+with a passion for Creating."
+`];
+    for (let i = 0; i < 3; i++) {
+    document.getElementById("reviews").innerHTML += `<div style="filter: invert(100%); background-color: white;" class="inside_card border-radius-card bottom_b top_b left_b right_b">
+<div class="row" style="margin-bottom: 25px; gap: 5px; height: 0; justify-content: start;  transform: translate(100%, 100%) rotate(-90deg); width: auto;">
+    <i class="fa-solid fa-star"></i>
+    <i style="margin-top: -10px;" class="fa-solid fa-star"></i>
+    <i class="fa-solid fa-star"></i>
+    </div>
+    <h3>${review_titles[i]}</h3>
+
+    <br>
+<p style="padding: 0 2px;" class="text_short">${review_bodies[i]}</p>
+<div class="row">
+    <!--src="../${pfps[i]}"-->
+<!--img  style="width: 45px; height: 45px;" class="left_b right_b top_b bottom_b" alt="">
+<div class="column"><p>${review_users[i]}</p><p class="text_short">${review_dates[i]}</p></div-->
+</div>
+</div>`;
+document.getElementById("cards__").innerHTML += `
+<div style="filter: invert(100%); background-color: white; padding: 35px;" class="card border-radius-card bottom_b top_b left_b right_b">
+<div class="row" style="margin-bottom: -30px; gap: 5px; height: 0; justify-content: start;  transform: translate(73%, 70%) rotate(40deg); width: auto;">
+    <i class="fa-solid fa-star"></i>
+    <i style="margin-top: -10px;" class="fa-solid fa-star"></i>
+    <i class="fa-solid fa-star"></i>
+    </div>
+    <h3>${review_titles[i]}</h3>
+
+    <br>
+<p style="padding: 0 2px;" class="text_short">${review_bodies[i]}</p></div>`;
+}
+</script>
+<i class="fa fa-"></i>
+<script>
+    var $cards = document.querySelector('.cards');
+
+if ($cards) {
+  var i = 0;
+  var a = 0
+  $cards.addEventListener('click', function() {
+    if (a == 0) {
+        a = 1
+        var active = (i++ % 3) + 1;
+        $cards.setAttribute('data-active', active);
+        $cards.removeAttribute('data-current');
+        setTimeout(function() {
+            a = 0;
+        $cards.setAttribute('data-current', active);
+        }, 1000);
+    }
+  });
+}
+
+</script>
